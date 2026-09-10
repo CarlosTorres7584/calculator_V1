@@ -2,6 +2,8 @@ const botones = document.querySelectorAll("button");
 
 const display = document.querySelector("#display");
 
+let resultadoMostrado =false;
+
 console.log(botones);
 
 botones.forEach(function(boton){
@@ -18,7 +20,13 @@ botones.forEach(function(boton){
             display.value = "";
         
         } else if (valor === "⌫"){
-            display.value = display.value.slice(0, -1)   
+            display.value = display.value.slice(0, -1);
+
+        }else if (
+            display.value === "" &&
+            (valor === "+" || valor === "x" || valor === "÷")
+        ){
+            return;
             
         }else if (
 
@@ -39,6 +47,14 @@ botones.forEach(function(boton){
             display.value += valor;
 
         }else if (valor === "="){
+
+            if (display.value === ""){
+                return;
+            }
+
+            if (operadores.includes(ultimoCaracter)){
+                return;
+            }
             
             let operacion = display.value;
 
@@ -48,6 +64,7 @@ botones.forEach(function(boton){
             try{
               
                 display.value = eval(operacion);
+                resultadoMostrado = true;
             
             }catch {
 
@@ -58,6 +75,15 @@ botones.forEach(function(boton){
             
 
         }else {
+
+            if (resultadoMostrado && !operadores.includes(valor)){
+                display.value = "";
+                resultadoMostrado = false;
+            }
+
+            if (resultadoMostrado && operadores.includes(valor)){
+                resultadoMostrado = false;
+            }
             display.value += valor;
         }
     })
